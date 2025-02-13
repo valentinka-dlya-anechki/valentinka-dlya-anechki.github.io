@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Валентинка для Ани</title>
+  <style>
+    /* Сброс стилей, чтобы не было отступов */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Градиентный фон */
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #ffe6e6, #ffcce6);
+      overflow: hidden; /* Чтобы не было скролла из-за анимации сердечек */
+    }
+
+    /* Контейнер для валентинки и кнопки */
+    .container {
+      position: relative;
+      z-index: 1; /* Чтобы сердечки летали за валентинкой */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* Картинка валентинки */
+    .valentine {
+      max-width: 80%;
+      height: auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+      cursor: pointer; /* Теперь изображение показывает, что его можно нажать */
+    }
+
+    .valentine:hover {
+      transform: scale(1.03);
+    }
+
+    /* Кнопка «Открыть» (увеличенные размеры и шрифт) */
+    #openMessage {
+      margin-top: 30px;
+      padding: 16px 32px;
+      background: #ff99cc;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    #openMessage:hover {
+      background: #ff66a3;
+      transform: scale(1.05);
+    }
+
+    /* Скрытый блок с посланием (увеличенные шрифт и отступы) */
+    #hiddenMessage {
+      margin-top: 30px;
+      display: none;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      padding: 30px;
+      width: 80%;
+      max-width: 600px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.6s forwards;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    /* Анимация для появления блока */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Стили сердечек */
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      animation: floatUp 7s linear infinite;
+      color: #ff5e95; /* Цвет сердечка (можно менять) */
+      z-index: 0; /* Чтобы они летали за контентом */
+    }
+
+    /* Анимация движения сердечек снизу вверх */
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 600px) {
+      .valentine {
+        max-width: 90%;
+      }
+      #hiddenMessage {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Контейнер с валентинкой, кнопкой и скрытым сообщением -->
+  <div class="container">
+    <img src="valentine.jpg" alt="Моя валентинка" class="valentine" />
+    <button id="openMessage">Открыть</button>
+    <div id="hiddenMessage">
+      <p>
+        Дорогая Аня,  
+        <br><br>
+        С Днём всех влюблённых! Я хочу, чтобы эта валентинка, пусть и цифровая,  
+        напомнила тебе о моих искренних чувствах. Спасибо, что ты есть!
+        <br><br>
+        С любовью,<br>
+        Твой Егорушка
+      </p>
+    </div>
+  </div>
+
+  <!-- Скрипт для сердечек и открытия сообщения -->
+  <script>
+    // Создаём множество "летающих" сердечек
+    const totalHearts = 30; // Количество сердечек
+    for (let i = 0; i < totalHearts; i++) {
+      createHeart();
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.textContent = '❤️'; // Можно заменить на другой символ/эмодзи
+      document.body.appendChild(heart);
+
+      // Случайная позиция и задержка
+      const left = Math.random() * 100; // Процент от ширины экрана
+      const size = Math.random() * 1.5 + 0.8; // Случайный размер
+      const delay = Math.random() * 5; // Секунды
+      const duration = Math.random() * 5 + 5; // 5-10 секунд на подъём
+
+      heart.style.left = left + 'vw';
+      heart.style.fontSize = 24 * size + 'px';
+      heart.style.animationDelay = delay + 's';
+      heart.style.animationDuration = duration + 's';
+
+      // Удаляем сердечко, когда анимация заканчивается, чтобы не засорять DOM
+      heart.addEventListener('animationend', () => {
+        heart.remove();
+        createHeart(); // Создаём новое сердечко, чтобы поток не прекращался
+      });
+    }
+
+    // Функция для открытия/закрытия послания
+    function toggleMessage() {
+      if (hiddenMessage.style.display === 'block') {
+        hiddenMessage.style.display = 'none';
+      } else {
+        hiddenMessage.style.display = 'block';
+      }
+    }
+
+    // Логика открытия/закрытия сообщения
+    const openMessageButton = document.getElementById('openMessage');
+    const hiddenMessage = document.getElementById('hiddenMessage');
+    const valentineImg = document.querySelector('.valentine');
+
+    openMessageButton.addEventListener('click', toggleMessage);
+    valentineImg.addEventListener('click', toggleMessage);
+  </script>
+</body>
+</html>
